@@ -3,6 +3,7 @@
 
 [La version française suit.](#---------------------------------------------------------------------)
 
+This is a test.  I'm adding  content to test if the release drafter will draft a release now.
 # Find benefits and services
 
 This is the code for _Find benefits and services_, a product being developed by VAC and CDS. The app is in beta and currently deployed at https://benefits-prestations.veterans.gc.ca. It is undergoing development and is not yet publicly released for use.
