@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import { globalTheme } from "../theme";
 import CardHeaderParentInfo from "./card_header_parent_info";
 import CardHeaderImportantInfo from "./card_header_important_info";
@@ -24,11 +25,14 @@ const headerDesc = css`
   margin-left: 20px;
   font-size: 18px;
   color: ${globalTheme.colour.greyishBrown};
-  @media only screen and (max-width: ${globalTheme.max.mobile}) {
+  @media only screen and (max-width: ${globalTheme.max.xs}) {
     font-size: 12px;
   }
   a {
     color: ${globalTheme.colour.greyishBrown};
+    :focus {
+      outline: 3px solid ${globalTheme.colour.focusColour};
+    }
   }
 `;
 
@@ -49,9 +53,9 @@ export class BenefitCardHeader extends Component {
 
     if (includeParentInfo || includeImportantInfo) {
       return (
-        <div className={cardTop}>
+        <div css={cardTop}>
           <AlertIcon t={t} />
-          <div className={headerDesc}>
+          <div css={headerDesc}>
             {includeParentInfo ? (
               <CardHeaderParentInfo
                 t={t}

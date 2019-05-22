@@ -10,7 +10,8 @@ import {
   getFilteredBenefits,
   getNonFilteredBenefits
 } from "../selectors/benefits";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import Header from "./typography/header";
 import SearchBox from "./search_box";
 import { getBenefitCountString } from "../utils/common";
@@ -87,7 +88,8 @@ export class BenefitsPane extends Component {
       <Grid container spacing={16}>
         <Grid item xs={12}>
           <Header
-            className={"BenefitsCounter " + title}
+            className={"BenefitsCounter"}
+            styles={title}
             size="md"
             headingLevel="h3"
             autoFocus={true}
@@ -112,7 +114,7 @@ export class BenefitsPane extends Component {
         {filteredBenefitsWithoutSearch.length === 0 ? null : (
           <React.Fragment>
             <Grid item xs={12}>
-              <div className={bottomPadding}>
+              <div css={bottomPadding}>
                 <SearchBox
                   inputId="bbSearchField"
                   buttonId="searchButtonLink"
@@ -121,6 +123,7 @@ export class BenefitsPane extends Component {
                   onChange={this.handleSearchChange}
                   disableButton={true}
                   onClear={() => setSearchString("")}
+                  url={this.props.url}
                 />
               </div>
             </Grid>
@@ -146,9 +149,7 @@ export class BenefitsPane extends Component {
                   store={store}
                 />
 
-                {nonFilteredBenefits.length > 0 ? (
-                  <div className={spacer} />
-                ) : null}
+                {nonFilteredBenefits.length > 0 ? <div css={spacer} /> : null}
                 <ResultsHeader
                   benefitCount={nonFilteredBenefits.length}
                   headerText={t("B3.results_all_benefits")}

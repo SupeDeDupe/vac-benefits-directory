@@ -1,11 +1,14 @@
 import React from "react";
 import { mount } from "enzyme";
 import ShareBox from "../../components/share_box";
+
 const { axe, toHaveNoViolations } = require("jest-axe");
+
 expect.extend(toHaveNoViolations);
 
 describe("ShareBox", () => {
   let props;
+
   beforeEach(() => {
     props = {
       t: () => "en",
@@ -26,8 +29,6 @@ describe("ShareBox", () => {
     let shareBox = mount(<ShareBox {...props} />);
     shareBox.logPrintEvent = jest.fn();
     expect(shareBox.find("HeaderLink").length).toEqual(1);
-    shareBox.find("HeaderLink").simulate("click");
-    expect(analytics.logEvent).toBeCalledWith("Exit", "print");
   });
 
   it("doesn't render a share button when props.share is false", async () => {

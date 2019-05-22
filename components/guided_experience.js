@@ -1,7 +1,8 @@
+/** @jsx jsx */
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@material-ui/core";
-import { css } from "emotion";
+import { css, jsx } from "@emotion/core";
 import Container from "./container";
 import Header from "./typography/header";
 import Body from "./typography/body";
@@ -15,11 +16,10 @@ import { showQuestion, getPageName } from "../utils/common";
 import HeaderButton from "./header_button";
 import Button from "./button";
 import Link from "next/link";
-import { getHomeUrl } from "../selectors/urls";
-import { AlphaBanner } from "./alpha_banner";
 
 const greyBox = css`
   background-color: ${globalTheme.colour.paleGreyTwo};
+  font-size: 24px;
   margin-top: 34px;
   padding: 35px 43px;
   p:first-of-type {
@@ -37,7 +37,7 @@ const greyBox = css`
 const box = css`
   padding: 35px;
   padding-top: 24px;
-  @media only screen and (max-width: ${globalTheme.max.mobile}) {
+  @media only screen and (max-width: ${globalTheme.max.xs}) {
     padding: 17px 26px 55px 26px;
   }
 `;
@@ -56,6 +56,9 @@ const mobileFullWidth = css`
     margin-left: 0;
   }
 `;
+const topMargin = css`
+  margin-top: 10px;
+`;
 const questions = css`
   margin: 0;
   padding: 0;
@@ -69,8 +72,8 @@ const body = css`
     font-size: 14px;
   }
 `;
-const leftMargin = css`
-  margin-left: 1.5em;
+const rightMargin = css`
+  margin-right: 1.5em;
   @media only screen and (max-width: ${globalTheme.max.xs}) {
     margin-left: 0;
     margin-bottom: 0.5em;
@@ -168,7 +171,7 @@ export class GuidedExperience extends Component {
   }
 
   render() {
-    const { t, url, id, reduxState, homeUrl } = this.props;
+    const { t, url, id, reduxState } = this.props;
     const question = reduxState.questions.filter(
       x => x.variable_name === id
     )[0];
@@ -188,12 +191,10 @@ export class GuidedExperience extends Component {
           <BreadCrumbs
             t={t}
             breadcrumbs={[]}
-            homeUrl={homeUrl}
             pageTitle={t("ge.Find benefits and services")}
           />
         </div>
-        <Paper padding="md" className={box}>
-          <AlphaBanner t={t} url={url} />
+        <Paper padding="md" styles={box} url={url} t={t} includeBanner={true}>
           <Grid container spacing={24} role="form">
             {id === "patronType" ? (
               <React.Fragment>
@@ -203,7 +204,7 @@ export class GuidedExperience extends Component {
                   </Header>
                   {id === "patronType" ? (
                     <React.Fragment>
-                      <Body className={greyBox}>
+                      <Body styles={greyBox}>
                         <p>{t("ge.intro_text_p1")}</p>
                         <p>{t("ge.intro_text_p2")}</p>
                       </Body>
@@ -212,12 +213,12 @@ export class GuidedExperience extends Component {
                 </Grid>
               </React.Fragment>
             ) : null}
-            <Grid item xs={12} className={questions}>
+            <Grid item xs={12} css={questions}>
               <Header size="md_lg" headingLevel="h2">
                 {this.getSubtitle(question)}
               </Header>
               {question.tooltip_english && question.tooltip_english !== "" ? (
-                <Body className={body}>
+                <Body styles={body}>
                   {t("current-language-code") === "en"
                     ? question.tooltip_english
                     : question.tooltip_french}
@@ -227,22 +228,23 @@ export class GuidedExperience extends Component {
             </Grid>
             <Grid item xs={12}>
               <Grid container spacing={16}>
-                <Grid item xs={12} md={8}>
-                  <Grid container spacing={8} className={mobileReverse}>
+                <Grid
+                  item
+                  xs={12}
+                  md={t("current-language-code") === "en" ? 8 : 12}
+                  lg={8}
+                >
+                  <Grid container spacing={8} css={mobileReverse}>
                     <HeaderLink
                       id="prevButton"
                       href={backUrl}
-                      className={mobileFullWidth}
+                      css={[mobileFullWidth, rightMargin]}
                       hasBorder
                     >
                       {t("back")}
                     </HeaderLink>
                     <Link id="nextLink" href={this.getNextUrl()}>
-                      <Button
-                        id="nextButton"
-                        mobileFullWidth={true}
-                        className={leftMargin}
-                      >
+                      <Button id="nextButton" mobileFullWidth={true}>
                         {this.getNextUrl().indexOf("benefits-directory") > -1
                           ? t("ge.show_results")
                           : t("next")}
@@ -250,12 +252,18 @@ export class GuidedExperience extends Component {
                     </Link>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={4} className={alignRight}>
+                <Grid
+                  item
+                  xs={12}
+                  md={t("current-language-code") === "en" ? 4 : 12}
+                  lg={4}
+                  css={alignRight}
+                >
                   <Link id="skipLink" href={this.getSkipUrl()}>
                     <HeaderButton
                       id="skipButton"
                       altStyle="grey"
-                      className={mobileFullWidth}
+                      css={[mobileFullWidth, topMargin]}
                     >
                       {t("ge.skip")}
                     </HeaderButton>
@@ -270,11 +278,10 @@ export class GuidedExperience extends Component {
   }
 }
 
-const mapStateToProps = (reduxState, props) => {
+const mapStateToProps = reduxState => {
   return {
     reduxState: reduxState,
-    sectionOrder: reduxState.questions.map(x => x.variable_name),
-    homeUrl: getHomeUrl(reduxState, props)
+    sectionOrder: reduxState.questions.map(x => x.variable_name)
   };
 };
 
@@ -285,8 +292,7 @@ GuidedExperience.propTypes = {
   sectionOrder: PropTypes.array.isRequired,
   t: PropTypes.func.isRequired,
   children: PropTypes.object.isRequired,
-  store: PropTypes.object,
-  homeUrl: PropTypes.string
+  store: PropTypes.object
 };
 
 export default connect(mapStateToProps)(GuidedExperience);

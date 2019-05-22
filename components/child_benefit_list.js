@@ -1,6 +1,6 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import HeaderLink from "./header_link";
 import { logEvent } from "../utils/analytics";
 import CardDetails from "./card_details";
@@ -33,23 +33,35 @@ const ChildBenefitList = props => {
     return null;
   }
   const language = t("current-language-code");
+  const utm =
+    "?utm_source=fbas&utm_medium=referral&utm_campaign=child-benefit&utm_content=";
+
   return (
     <CardDetails summary={colonText}>
-      <div className={children}>
+      <div css={children}>
         <div>
-          <ul className={listStyle}>
+          <ul css={listStyle}>
             {benefits.map(cb => (
-              <li key={cb.id} className={liStyle}>
+              <li key={cb.id} css={liStyle}>
                 <HeaderLink
                   rel="noopener noreferrer"
-                  className={heading}
+                  css={heading}
                   size="small"
-                  href={language === "en" ? cb.benefitPageEn : cb.benefitPageFr}
+                  href={
+                    (language === "en" ? cb.benefitPageEn : cb.benefitPageFr) +
+                    utm +
+                    cb.vacNameEn
+                      .split(" ")
+                      .join("-")
+                      .toLowerCase()
+                  }
                   onClick={() => {
                     logEvent(
                       "Exit",
                       "child benefit",
-                      language === "en" ? cb.benefitPageEn : cb.benefitPageFr
+                      (language === "en"
+                        ? cb.benefitPageEn
+                        : cb.benefitPageFr) + utm
                     );
                     return true;
                   }}

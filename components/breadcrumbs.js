@@ -1,12 +1,13 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import { globalTheme } from "../theme";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import HeaderLink from "./header_link";
 
 const greyBanner = css`
   font-family: ${globalTheme.fontFamilySansSerif};
-  margin: 30px 0;
+  margin: 15px 0;
   font-weight: 700;
   color: ${globalTheme.colour.greyishBrown};
   font-size: 16px;
@@ -14,16 +15,18 @@ const greyBanner = css`
   @media only screen and (max-width: ${globalTheme.max.xs}) {
     margin: 11px 0;
   }
+  padding-top: 10px;
+  padding-bottom: 10px;
 `;
 
 const separator = css`
-  color: ${globalTheme.colour.slateGrey};
+  color: ${globalTheme.colour.navy};
   font-weight: normal;
-  padding: 2px;
+  padding: 7px;
 `;
 
 const urlStyle = css`
-  color: ${globalTheme.colour.slateGrey};
+  color: ${globalTheme.colour.navy};
   text-decoration: underline;
   font-size: 16px;
   font-weight: 700;
@@ -31,7 +34,7 @@ const urlStyle = css`
 `;
 
 const currentPageStyle = css`
-  color: ${globalTheme.colour.slateGrey};
+  color: ${globalTheme.colour.navy};
   font-size: 16px;
   font-weight: 700;
   padding: 0;
@@ -39,27 +42,27 @@ const currentPageStyle = css`
 
 export class BreadCrumbs extends Component {
   render() {
-    const { breadcrumbs, homeUrl } = this.props;
+    const { breadcrumbs, t } = this.props;
     return (
-      <div className={greyBanner}>
+      <div css={greyBanner}>
         <div>
-          <HeaderLink id="homeButton" href={homeUrl} className={urlStyle}>
+          <HeaderLink id="homeButton" href={t("ge.home_link")} css={urlStyle}>
             {this.props.t("titles.home")}
           </HeaderLink>
           {breadcrumbs.map((breadcrumb, i) => (
             <span key={"breadcrumb" + i}>
-              <span className={separator}>{" > "}</span>
+              <span css={separator}>{" > "}</span>
               <HeaderLink
                 id={"breadcrumb" + i}
                 href={breadcrumb.url}
-                className={urlStyle}
+                css={urlStyle}
               >
                 {breadcrumb.name}
               </HeaderLink>
             </span>
           ))}
-          <span className={separator}>{" > "}</span>
-          <span className={currentPageStyle}>{this.props.pageTitle}</span>
+          <span css={separator}>{" > "}</span>
+          <span css={currentPageStyle}>{this.props.pageTitle}</span>
         </div>
       </div>
     );
@@ -69,8 +72,7 @@ export class BreadCrumbs extends Component {
 BreadCrumbs.propTypes = {
   t: PropTypes.func.isRequired,
   breadcrumbs: PropTypes.array.isRequired,
-  pageTitle: PropTypes.string.isRequired,
-  homeUrl: PropTypes.string
+  pageTitle: PropTypes.string.isRequired
 };
 
 export default BreadCrumbs;

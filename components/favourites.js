@@ -1,11 +1,12 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@material-ui/core";
 import BenefitList from "./benefit_list";
 import { connect } from "react-redux";
-import { getPrintUrl, getHomeUrl } from "../selectors/urls";
+import { getPrintUrl, getGuidedExperienceUrl } from "../selectors/urls";
 import Link from "next/link";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import Container from "./container";
 import Header from "./typography/header";
 import Body from "./typography/body";
@@ -18,7 +19,6 @@ import Cookies from "universal-cookie";
 import Paper from "./paper";
 import StickyHeader from "./sticky_header";
 import QuickLinks from "./quick_links";
-import AlphaBanner from "./alpha_banner";
 
 const divider = css`
   border-top: 2px solid ${globalTheme.colour.duckEggBlue};
@@ -71,7 +71,7 @@ export class Favourites extends Component {
   };
 
   render() {
-    const { t, url, printUrl, homeUrl, store } = this.props; // eslint-disable-line no-unused-vars
+    const { t, url, printUrl, guidedExperienceUrl, store } = this.props; // eslint-disable-line no-unused-vars
 
     const filteredBenefits = this.filterBenefits(
       this.props.benefits,
@@ -80,8 +80,12 @@ export class Favourites extends Component {
 
     const breadcrumbs = [
       {
-        url: mutateUrl(url, "/benefits-directory"),
+        url: guidedExperienceUrl,
         name: t("ge.Find benefits and services")
+      },
+      {
+        url: mutateUrl(url, "/benefits-directory"),
+        name: t("breadcrumbs.ben_dir_page_title")
       }
     ];
 
@@ -90,19 +94,19 @@ export class Favourites extends Component {
         <Container id="favourites">
           <BreadCrumbs
             t={t}
-            homeUrl={homeUrl}
             breadcrumbs={breadcrumbs}
             pageTitle={t("index.your_saved_benefits")}
           />
-          <Paper padding="md" className={innerDiv}>
-            <AlphaBanner t={t} url={url} />
+          <Paper
+            padding="md"
+            styles={innerDiv}
+            url={url}
+            t={t}
+            includeBanner={true}
+          >
             <Grid container spacing={32}>
               <Grid item xs={12}>
-                <Header
-                  className={"BenefitsCounter"}
-                  size="xl"
-                  headingLevel="h1"
-                >
+                <Header css={"BenefitsCounter"} size="xl" headingLevel="h1">
                   {t("titles.saved_list")}
                 </Header>
               </Grid>
@@ -114,7 +118,11 @@ export class Favourites extends Component {
                 showShareLink={false}
               />
               <Grid item xs={12}>
-                <QuickLinks t={t} onFavourites={true} />
+                <QuickLinks
+                  t={t}
+                  onFavourites={true}
+                  rightHandText={t("favourites.quick_links_text")}
+                />
               </Grid>
               <Grid item md={4} xs={12}>
                 <div id="saved-list">
@@ -136,11 +144,7 @@ export class Favourites extends Component {
                     </Grid>
                   ) : null}
                   <Grid item xs={12}>
-                    <Header
-                      className={headerPadding}
-                      size="md"
-                      headingLevel="h3"
-                    >
+                    <Header styles={headerPadding} size="md" headingLevel="h3">
                       {filteredBenefits.length === 1
                         ? t("titles.1_saved_benefit")
                         : t("titles.x_saved_benefits", {
@@ -174,7 +178,7 @@ export class Favourites extends Component {
                 ) : null}
               </Grid>
               <Grid item xs={12}>
-                <div className={divider} />
+                <div css={divider} />
               </Grid>
               <Grid item md={4} xs={12}>
                 <div id="next-steps">
@@ -213,7 +217,7 @@ const mapStateToProps = (reduxState, props) => {
     cookiesDisabled: reduxState.cookiesDisabled,
     benefits: reduxState.benefits,
     printUrl: getPrintUrl(reduxState, props, { fromFavourites: true }),
-    homeUrl: getHomeUrl(reduxState, props)
+    guidedExperienceUrl: getGuidedExperienceUrl(reduxState, props)
   };
 };
 
@@ -226,7 +230,7 @@ Favourites.propTypes = {
   favouriteBenefits: PropTypes.array.isRequired,
   saveFavourites: PropTypes.func.isRequired,
   url: PropTypes.object.isRequired,
-  homeUrl: PropTypes.string.isRequired,
+  guidedExperienceUrl: PropTypes.string.isRequired,
   store: PropTypes.object
 };
 

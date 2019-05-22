@@ -1,6 +1,6 @@
 import NoResultsButtons from "../../components/no_results_buttons";
 import React from "react";
-import { mount, shallow } from "enzyme";
+import { mount } from "enzyme";
 
 const { axe, toHaveNoViolations } = require("jest-axe");
 expect.extend(toHaveNoViolations);
@@ -20,9 +20,9 @@ describe("NoResultsButtons", () => {
     expect(await axe(html)).toHaveNoViolations();
   });
 
-  it("contains 2 buttons", () => {
+  it("contains 1 button", () => {
     expect(
-      shallow(<NoResultsButtons {...props} />).find("Button").length
-    ).toEqual(2);
+      mount(<NoResultsButtons {...props} />).find("Button").length
+    ).toEqual(1);
   });
 });

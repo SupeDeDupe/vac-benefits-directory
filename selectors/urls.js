@@ -47,7 +47,7 @@ export const getFavouritesUrl = createSelector(
   }
 );
 
-export const getHomeUrl = createSelector(
+export const getGuidedExperienceUrl = createSelector(
   [
     getProfileFilters,
     getNeedsFilter,
@@ -119,23 +119,5 @@ export const getPrintUrl = createSelector(
       }
     });
     return "/print?" + params.join("&");
-  }
-);
-
-export const getMapUrl = createSelector(
-  [
-    getProfileFilters,
-    getNeedsFilter,
-    getSearchStringFilter,
-    getCurrentLanguage
-  ],
-  (profileFilters, selectedNeeds, searchString, currentLanguage) => {
-    const params = getSelectionParams(
-      profileFilters,
-      selectedNeeds,
-      searchString,
-      currentLanguage
-    );
-    return "/map?" + params;
   }
 );

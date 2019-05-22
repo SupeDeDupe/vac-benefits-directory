@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import { globalTheme } from "../theme";
 import HeaderButton from "./header_button";
 import HeaderLink from "./header_link";
@@ -11,16 +12,20 @@ import { uuidv4 } from "../utils/common";
 import { logEvent } from "../utils/analytics";
 
 const shareBoxItem = css`
-  color: ${globalTheme.colour.darkGreyBlue};
-  margin-left: 5px;
+  color: ${globalTheme.colour.greyishBrown};
+  margin-left: 10px;
+  svg {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
 `;
 const shareText = css`
   font-family: ${globalTheme.fontFamilySansSerif};
   font-size: 14px;
-  color: ${globalTheme.colour.navy};
+  color: ${globalTheme.colour.greyishBrown};
   font-weight: bold;
   text-transform: uppercase;
-  margin-right: 10px;
+  margin-right: 5px;
   @media only screen and (max-width: ${globalTheme.max.xs}) {
     display: none;
   }
@@ -34,15 +39,14 @@ class ShareBox extends Component {
   uid = uuidv4();
 
   render() {
-    const { t, printUrl, url, showShareLink, className } = this.props;
+    const { t, printUrl, url, showShareLink, css } = this.props;
     return (
-      <div className={className}>
-        <span className={shareText}>{t("share_colon")}</span>
+      <div css={css}>
+        <span css={shareText}>{t("share_colon")}</span>
         <HeaderLink
-          className={shareBoxItem}
+          css={shareBoxItem}
           size="small"
           href={printUrl}
-          target="_blank"
           aria-label={t("Print")}
           onClick={() => {
             logEvent("Exit", "print");
@@ -54,7 +58,7 @@ class ShareBox extends Component {
           <React.Fragment>
             <HeaderButton
               id={this.uid}
-              className={shareBoxItem}
+              styles={shareBoxItem}
               size="small"
               aria-label={t("titles.share")}
               onClick={() => this.setState({ showModal: true })}
@@ -81,7 +85,7 @@ ShareBox.propTypes = {
   printUrl: PropTypes.string,
   url: PropTypes.object.isRequired,
   showShareLink: PropTypes.bool.isRequired,
-  className: PropTypes.string
+  css: PropTypes.string
 };
 
 export default ShareBox;
