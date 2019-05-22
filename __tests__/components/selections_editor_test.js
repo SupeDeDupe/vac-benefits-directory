@@ -12,7 +12,10 @@ import questionDisplayLogicFixture from "../fixtures/question_display_logic";
 import questionClearLogicFixture from "../fixtures/question_clear_logic";
 import responsesFixture from "../fixtures/responses";
 import Router from "next/router";
-
+window.matchMedia = () => ({
+  addListener: () => {},
+  removeListener: () => {}
+});
 describe("SelectionsEditor", () => {
   let props;
   let mockStore, reduxData;
@@ -109,6 +112,8 @@ describe("SelectionsEditor", () => {
 
   it("clicking #ClearFilters runs the clearFilters function", () => {
     reduxData.selectedNeeds = { foo: "bar" };
+    let analytics = require("../../utils/analytics");
+    analytics.logEvent = jest.fn();
     const mounted = mount(<SelectionsEditor {...props} {...reduxData} />);
     mounted.instance().clearFilters = jest.fn();
     mounted

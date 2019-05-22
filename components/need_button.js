@@ -3,14 +3,8 @@ import PropTypes from "prop-types";
 import Checkbox from "./checkbox";
 import { connect } from "react-redux";
 import { logEvent } from "../utils/analytics";
-import { css } from "emotion";
 import Router from "next/router";
 import { mutateUrl } from "../utils/common";
-
-const style = css`
-  margin-bottom: 10px;
-  margin-right: 10px;
-`;
 
 export class NeedButton extends Component {
   handleClick = id => {
@@ -18,7 +12,9 @@ export class NeedButton extends Component {
     if (newSelectedNeeds.hasOwnProperty(id)) {
       delete newSelectedNeeds[id];
     } else {
-      logEvent("FilterClick", "need", id);
+      this.props.url.route === "/benefits-directory"
+        ? logEvent("SidebarFilterClick", "need", id)
+        : logEvent("GEFilterClick", "need", id);
       newSelectedNeeds[id] = id;
     }
     this.props.setSelectedNeeds(newSelectedNeeds);
@@ -39,7 +35,6 @@ export class NeedButton extends Component {
         onChange={() => this.handleClick(need.id)}
         value={need.id}
         disabled={disabled ? "disabled" : null}
-        className={style}
         sidebar={this.props.updateUrl}
       >
         {t("current-language-code") === "en" ? need.nameEn : need.nameFr}
@@ -72,7 +67,7 @@ NeedButton.propTypes = {
   disabled: PropTypes.string,
   store: PropTypes.object,
   updateUrl: PropTypes.bool,
-  url: PropTypes.object
+  url: PropTypes.object.isRequired
 };
 
 NeedButton.defaultProps = {

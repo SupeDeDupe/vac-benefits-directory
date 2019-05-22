@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logEvent } from "../utils/analytics";
 import { globalTheme } from "../theme";
-import { css, cx } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import Header from "./typography/header";
 import Tooltip from "./tooltip";
 import Radio from "./radio";
@@ -20,6 +21,17 @@ const formLabel = css`
   font-bold: normal;
   font-style: normal;
   font-stretch: normal;
+  letter-spacing: normal;
+`;
+const feedbackPageformLabel = css`
+  margin-bottom: 10px;
+  color: ${globalTheme.colour.greyishBrown};
+  font-family: ${globalTheme.fontFamilySansSerif};
+  font-size: 20px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
   letter-spacing: normal;
 `;
 const radioOption = css`
@@ -87,7 +99,9 @@ export class RadioSelector extends React.Component {
     const response = event.target.value;
     this.props.saveQuestionResponse(question, response);
     this.clearAppropriateResponses(question, response);
-    logEvent("FilterClick", question, response);
+    this.props.url.route === "/benefits-directory"
+      ? logEvent("SidebarFilterClick", question, response)
+      : logEvent("GEFilterClick", question, response);
     if (this.props.updateUrl) {
       this.props.url.query[question] = response;
       Router.replace(mutateUrl(this.props.url, "", this.props.url.query));
@@ -112,24 +126,29 @@ export class RadioSelector extends React.Component {
       responses,
       legend,
       tooltipText,
-      className
+      styles
     } = this.props;
     if (options.length !== 0) {
       return (
-        <div className={formControl}>
+        <div css={formControl}>
           <Tooltip
             disabled={!tooltipText}
             tooltipText={tooltipText}
             width={250}
           >
-            <Header className={formLabel} size="sm">
-              <span className={tooltipText ? underline : ""}>{legend}</span>
+            <Header
+              styles={
+                this.props.feedbackPage ? feedbackPageformLabel : formLabel
+              }
+              size="sm"
+            >
+              <span css={tooltipText ? underline : ""}>{legend}</span>
             </Header>
           </Tooltip>
 
           <div
             aria-label={legend}
-            className={className ? cx(leftIndent, className) : leftIndent}
+            css={styles ? [leftIndent, styles] : leftIndent}
           >
             {options.map(option => {
               return (
@@ -138,7 +157,7 @@ export class RadioSelector extends React.Component {
                   checked={responses[selectorType] === option.variable_name}
                   onChange={this.handleSelect}
                   value={option.variable_name}
-                  className={radioOption}
+                  styles={radioOption}
                   sidebar={this.props.updateUrl}
                 >
                   {t("current-language-code") === "en"
@@ -190,10 +209,11 @@ RadioSelector.propTypes = {
   options: PropTypes.array.isRequired,
   tooltipText: PropTypes.string,
   store: PropTypes.object,
-  className: PropTypes.string,
+  styles: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   name: PropTypes.string,
   updateUrl: PropTypes.bool,
-  url: PropTypes.object
+  url: PropTypes.object.isRequired,
+  feedbackPage: PropTypes.bool
 };
 
 export default connect(

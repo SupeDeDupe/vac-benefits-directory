@@ -1,23 +1,16 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import SaveChecked from "./icons/SaveChecked";
 import SaveUnchecked from "./icons/SaveUnchecked";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
-import { cx, css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import HeaderButton from "./header_button";
 import { areCookiesDisabled } from "../utils/common";
 import Tooltip from "./tooltip";
 import CloseButton from "./icons/CloseButton";
 import { globalTheme } from "../theme";
-
-const saveButton = css`
-  margin-left: 0px !important;
-  padding-left: 0px !important;
-  padding-right: 0px !important;
-  padding-top: 0.526315em;
-  padding-bottom: 0.526315em;
-`;
 
 const xButton = css`
   color: ${globalTheme.colour.blackish2};
@@ -41,7 +34,7 @@ const rightAlign = css`
 `;
 
 const saveIcon = css`
-  @media only screen and (max-width: ${globalTheme.max.mobile}) {
+  @media only screen and (max-width: ${globalTheme.max.xs}) {
     font-size: 45px !important;
   }
 `;
@@ -82,11 +75,11 @@ export class FavouriteButton extends Component {
       <Tooltip
         disabled={!this.props.cookiesDisabled}
         tooltipText={t("favourites.disabled_cookies_tooltip")}
-        className={icon ? rightAlign : null}
+        styles={icon ? rightAlign : null}
       >
         {icon ? (
           <button
-            className={xButton}
+            css={xButton}
             disabled={this.props.cookiesDisabled}
             aria-label={longButtonText + " " + benefitName}
             id={"favourite-" + benefit.id}
@@ -102,7 +95,6 @@ export class FavouriteButton extends Component {
             disabled={this.props.cookiesDisabled}
             ariaLabel={longButtonText + " " + benefitName}
             id={"favourite-" + benefit.id}
-            className={saveButton}
             aria-label={t("B3.favouritesButtonText")}
             onClick={() => this.toggleFavourite(benefit.id)}
             onMouseOver={() => {
@@ -111,9 +103,9 @@ export class FavouriteButton extends Component {
             size="small"
           >
             {isSaved ? (
-              <SaveChecked className={cx("saved", saveIcon)} />
+              <SaveChecked css={["saved", saveIcon]} />
             ) : (
-              <SaveUnchecked className={cx("notSaved", saveIcon)} />
+              <SaveUnchecked css={["notSaved", saveIcon]} />
             )}
             <span>{longButtonText}</span>
           </HeaderButton>

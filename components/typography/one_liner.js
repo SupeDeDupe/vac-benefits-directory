@@ -1,12 +1,13 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import { globalTheme } from "../../theme";
-import { cx, css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 
 const style = css`
   font-family: ${globalTheme.fontFamilySansSerif};
   font-size: 24px;
-  @media only screen and (max-width: ${globalTheme.max.mobile}) {
+  @media only screen and (max-width: ${globalTheme.max.xs}) {
     font-size: 16px;
   }
   font-weight: normal;
@@ -16,14 +17,16 @@ const style = css`
 
 class OneLiner extends Component {
   render() {
-    const { className, children } = this.props;
+    const { children } = this.props;
     return (
-      <div className={className ? cx(style, className) : style}>{children}</div>
+      <div css={this.props.styles ? [style, this.props.styles] : style}>
+        {children}
+      </div>
     );
   }
 }
 OneLiner.propTypes = {
   children: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  className: PropTypes.string
+  styles: PropTypes.object
 };
 export default OneLiner;

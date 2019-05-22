@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import withI18N from "../lib/i18nHOC";
 import Layout from "../components/layout";
 import PropTypes from "prop-types";
@@ -10,19 +10,19 @@ import Button from "../components/button";
 import Header from "../components/typography/header";
 import Router from "next/router";
 import BreadCrumbs from "../components/breadcrumbs";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import { globalTheme } from "../theme";
 import { mutateUrl, getBenefitCountString, getPageName } from "../utils/common";
 import { connect } from "react-redux";
 import GuidedExperienceSummary from "../components/guided_experience_summary";
 import Body from "../components/typography/body";
 import { getFilteredBenefits } from "../selectors/benefits";
-import { getHomeUrl } from "../selectors/urls";
-import AlphaBanner from "../components/alpha_banner";
+import { getGuidedExperienceUrl } from "../selectors/urls";
 
 const box = css`
   padding: 63px 63px 63px 63px;
-  @media only screen and (max-width: ${globalTheme.max.mobile}) {
+  @media only screen and (max-width: ${globalTheme.max.xs}) {
     padding: 26px 26px 55px 26px;
   }
 `;
@@ -43,12 +43,20 @@ export class Summary extends Component {
       reduxState,
       store,
       filteredBenefits,
-      homeUrl
+      guidedExperienceUrl
     } = this.props;
     const prevSection =
       reduxState.patronType === "organization" ? "patronType" : "needs";
     const backUrl = mutateUrl(url, "/" + getPageName(prevSection));
     const benefitsToConsider = getBenefitCountString(filteredBenefits, t);
+
+    const breadcrumbs = [
+      {
+        url: guidedExperienceUrl,
+        name: t("ge.Find benefits and services")
+      }
+    ];
+
     return (
       <Layout
         i18n={i18n}
@@ -63,15 +71,13 @@ export class Summary extends Component {
           <div>
             <BreadCrumbs
               t={t}
-              breadcrumbs={[]}
-              homeUrl={homeUrl}
+              breadcrumbs={breadcrumbs}
               pageTitle={t("ge.Find benefits and services")}
             />
           </div>
-          <Paper padding="md" className={box}>
-            <AlphaBanner t={t} url={url} />
+          <Paper padding="md" styles={box} url={url} t={t} includeBanner={true}>
             <Grid container spacing={24}>
-              <Grid item xs={12} className={questions}>
+              <Grid item xs={12} css={questions}>
                 <Header size="md_lg" headingLevel="h2">
                   {t("ge.summary_subtitle")}
                 </Header>
@@ -100,7 +106,7 @@ export class Summary extends Component {
                 </HeaderButton>
               </Grid>
               <Grid item xs={8} md={6}>
-                <div className={alignRight}>
+                <div css={alignRight}>
                   <Button
                     id="nextButton"
                     onClick={() =>
@@ -125,7 +131,7 @@ const mapStateToProps = (reduxState, props) => {
   return {
     reduxState: reduxState,
     filteredBenefits: getFilteredBenefits(reduxState, props),
-    homeUrl: getHomeUrl(reduxState, props)
+    guidedExperienceUrl: getGuidedExperienceUrl(reduxState, props)
   };
 };
 
@@ -136,7 +142,7 @@ Summary.propTypes = {
   url: PropTypes.object.isRequired,
   t: PropTypes.func.isRequired,
   store: PropTypes.object,
-  homeUrl: PropTypes.string
+  guidedExperienceUrl: PropTypes.string
 };
 
 export default withI18N(connect(mapStateToProps)(Summary));

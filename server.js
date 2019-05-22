@@ -33,9 +33,11 @@ const readJsonAsync = function(filename) {
 const getAllData = async function() {
   let airtableData;
   if (staging) {
+    // eslint-disable-next-line no-console
     console.log("Staging environment, downloading from Airtable");
     airtableData = await airTable.hydrateFromAirtable();
   } else {
+    // eslint-disable-next-line no-console
     console.log("Production environment, using static file");
     airtableData = await readJsonAsync("data/data.json");
   }
@@ -110,12 +112,12 @@ Promise.resolve(getAllData()).then(allData => {
 
       req.data = data;
       req.language = lang ? lang.split(",")[0] : "en";
-
       if (
         browser &&
         browser.name === "ie" &&
         parseInt(browser.version) < 11 &&
-        !req.url.includes("all-benefits")
+        !req.url.includes("all-benefits") &&
+        !req.url.includes(".css")
       ) {
         res.sendFile("fallback-pages/browser-incompatible.html", {
           root: __dirname
@@ -135,6 +137,14 @@ Promise.resolve(getAllData()).then(allData => {
         res
           .status(404)
           .send("The Data Validation page only exists on the staging app.");
+      } else if (req.url.includes("favourites") && !staging) {
+        res
+          .status(404)
+          .send("The Favourites page only exists on the staging app.");
+      } else if (req.url.includes("summary") && !staging) {
+        res
+          .status(404)
+          .send("The summary page only exists on the staging app.");
       } else {
         const favouriteBenefits = new Cookies(req.headers.cookie).get(
           "favouriteBenefits"

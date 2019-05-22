@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { globalTheme } from "../../theme";
-import { cx, css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 
 const sizeDict = {
   xl: {
@@ -40,7 +41,7 @@ class Header extends Component {
   style = css`
     font-family: ${sizeDict[this.props.size].fontFamily};
     font-size: ${sizeDict[this.props.size].fontSize}px;
-    @media only screen and (max-width: ${globalTheme.max.mobile}) {
+    @media only screen and (max-width: ${globalTheme.max.xs}) {
       font-size: ${0.8 * sizeDict[this.props.size].fontSize}px;
     }
     font-weight: ${sizeDict[this.props.size].fontWeight};
@@ -63,10 +64,9 @@ class Header extends Component {
   }
 
   render() {
-    const { children, className, headingLevel, id, autoFocus } = this.props;
-
+    const { children, styles, headingLevel, id, autoFocus } = this.props;
     const props = {
-      className: className ? cx(this.style, className) : this.style,
+      css: styles ? [this.style, styles] : this.style,
       id: id
     };
 
@@ -96,7 +96,7 @@ Header.propTypes = {
     PropTypes.string,
     PropTypes.array
   ]),
-  className: PropTypes.string,
+  styles: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   headingLevel: PropTypes.string,
   size: PropTypes.string,
   id: PropTypes.string,

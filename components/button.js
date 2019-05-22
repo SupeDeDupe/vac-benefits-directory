@@ -1,7 +1,7 @@
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import styled from "@emotion/styled";
 import PropTypes from "prop-types";
-import React from "react";
 import { globalTheme } from "../theme";
 
 const StyledButton = styled("button")(
@@ -58,20 +58,17 @@ const StyledButton = styled("button")(
     padding: isSmall ? "6px 10px 4px 12px" : undefined
   }),
   ({ isSecondary }) => ({
-    backgroundColor: isSecondary ? globalTheme.colour.cerulean : undefined,
+    color: isSecondary ? globalTheme.colour.greyishBrown : undefined,
+    backgroundColor: isSecondary ? globalTheme.colour.darkPaleGrey : undefined,
     ":hover": {
-      backgroundColor: isSecondary ? globalTheme.colour.darkGreyBlue : undefined
+      backgroundColor: isSecondary ? globalTheme.colour.navy : undefined
     },
     ":focus": {
-      backgroundColor: isSecondary
-        ? globalTheme.colour.darkGreyBlue
-        : undefined,
+      backgroundColor: isSecondary ? globalTheme.colour.navy : undefined,
       outline: `3px solid ` + globalTheme.colour.focusColour
     },
     ":active": {
-      boxShadow: isSecondary
-        ? `0 0 0 ${globalTheme.colour.darkGreyBlue}`
-        : undefined
+      boxShadow: isSecondary ? `0 0 0 ${globalTheme.colour.navy}` : undefined
     }
   })
 );
@@ -90,7 +87,7 @@ const Button = ({ size, secondary, children, icon, ...props }) => (
     isBig={size === "big"}
     isSmall={size === "small"}
     isSecondary={secondary}
-    className={props.mobileFullWidth ? mobileFullWidth : ""}
+    css={props.mobileFullWidth ? mobileFullWidth : ""}
     {...props}
   >
     {children}

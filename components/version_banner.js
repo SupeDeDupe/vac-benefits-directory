@@ -12,19 +12,16 @@ const white = css`
   }
 `;
 
-const bottomMargin = css`
-  margin-bottom: 24px;
-`;
-
 const Banner = css`
   display: flex;
   display: -ms-flexbox;
   align-items: center;
   -ms-flex-align: center;
-  padding-bottom: 24px;
-  border-bottom: 4px solid ${globalTheme.colour.darkPaleGrey};
+  background-color: ${globalTheme.colour.paleGreyTwo};
+  border-top: 8px solid ${globalTheme.colour.borderGreen};
   color: ${globalTheme.colour.charcoalGrey};
-  font-family: ${globalTheme.fontFamilySerif};
+  font-family: ${globalTheme.fontFamilySansSerif};
+  padding: 10px 30px 10px;
   span:first-of-type {
     font-weight: 700 !important;
     padding: 0.2rem 0.7rem;
@@ -34,30 +31,28 @@ const Banner = css`
   }
 `;
 /**
- * Renders an alpha banner and renders passed children in the `Text` container
+ * Renders an version banner and renders passed children in the `Text` container
  */
-export class AlphaBanner extends Component {
+export class VersionBanner extends Component {
   render() {
     const { t, url, ...rest } = this.props;
     return (
-      <div className={bottomMargin}>
-        <aside {...rest} className={Banner}>
-          <PhaseBadge phase={t("header.beta")} />
-          <span>
-            {t("beta_banner.main")} &nbsp;
-            <Link href={{ pathname: "/feedback", query: url.query }}>
-              <a className={white}>{t("beta_banner.link_text")}</a>
-            </Link>
-          </span>
-        </aside>
-      </div>
+      <aside {...rest} className={Banner}>
+        <PhaseBadge phase={t("header.beta")} />
+        <span>
+          {t("beta_banner.main")} &nbsp;
+          <Link href={{ pathname: "/feedback", query: url.query }}>
+            <a className={white}>{t("beta_banner.link_text")}</a>
+          </Link>
+        </span>
+      </aside>
     );
   }
 }
 
-AlphaBanner.propTypes = {
+VersionBanner.propTypes = {
   t: PropTypes.func.isRequired,
   url: PropTypes.object.isRequired
 };
 
-export default AlphaBanner;
+export default VersionBanner;

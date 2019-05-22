@@ -1,12 +1,13 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import PropTypes from "prop-types";
 import { Grid } from "@material-ui/core";
 import Highlighter from "react-highlight-words";
-import FavouriteButton from "./favourite_button";
+//import FavouriteButton from "./favourite_button";
 import Paper from "./paper";
 import { connect } from "react-redux";
 import NeedTag from "./need_tag";
-import { css } from "emotion";
+/** @jsx jsx */
+import { css, jsx } from "@emotion/core";
 import BenefitExpansion from "./benefit_expansion";
 import BenefitCardHeader from "./benefit_card_header";
 import OneLiner from "./typography/one_liner";
@@ -25,7 +26,7 @@ const cardDescriptionText = css`
   padding-left: 35px;
   padding-right: 35px;
   padding-top: 10px;
-  @media only screen and (max-width: ${globalTheme.max.mobile}) {
+  @media only screen and (max-width: ${globalTheme.max.xs}) {
     padding-top: 14px;
   }
 `;
@@ -52,22 +53,23 @@ const padding = css`
 `;
 const flex = css`
   align-items: center;
+  padding-top: 5px;
   // if screen size is min.sm or larger put favourites button below learn more
   @media only screen and (min-width: ${globalTheme.min.sm}) {
     display: flex;
   }
 `;
-const floatRight = css`
-  margin-left: auto;
-  order: 2;
-`;
+// const floatRight = css`
+//   margin-left: auto;
+//   order: 2;
+// `;
 
 const tagStyle = css`
-  width: 12px;
-  height: 12px;
   font-size: 12px !important;
   color: ${globalTheme.colour.slateGrey} !important;
-  margin-right: 0.8em;
+  margin-right: 8px;
+  margin-bottom: 2px;
+  vertical-align: middle;
 `;
 
 export class BenefitCard extends Component {
@@ -89,15 +91,15 @@ export class BenefitCard extends Component {
     const searchWords = this.props.searchString.split(/\s+/);
     return (
       <Grid item xs={12}>
-        <div className={root}>
-          <Paper className={cardBody}>
+        <div css={root}>
+          <Paper styles={cardBody}>
             <BenefitCardHeader
               benefit={benefit}
               t={t}
               store={this.props.store}
               language={language}
             />
-            <Header className={benefitName} size="md" headingLevel="h2">
+            <Header styles={benefitName} size="md" headingLevel="h2">
               <Highlighter
                 searchWords={searchWords}
                 autoEscape={true}
@@ -107,7 +109,7 @@ export class BenefitCard extends Component {
                     : benefit.vacNameFr
                 }
               />
-              {this.props.savedList === false ? (
+              {/* {this.props.savedList === false ? (
                 <FavouriteButton
                   benefit={benefit}
                   toggleOpenState={() => {}}
@@ -115,10 +117,10 @@ export class BenefitCard extends Component {
                   t={t}
                   icon={true}
                 />
-              ) : null}
+              ) : null} */}
             </Header>
-            <div className={padding}>
-              {needsMet.length > 0 ? <Tag className={tagStyle} /> : null}
+            <div css={padding}>
+              {needsMet.length > 0 ? <Tag css={tagStyle} /> : null}
               {needsMet.map(need => (
                 <NeedTag
                   key={benefit.id + need.id}
@@ -128,7 +130,10 @@ export class BenefitCard extends Component {
                 />
               ))}
             </div>
-            <OneLiner className={"cardDescription " + cardDescriptionText}>
+            <OneLiner
+              className={"cardDescription"}
+              styles={cardDescriptionText}
+            >
               <Highlighter
                 searchWords={searchWords}
                 autoEscape={true}
@@ -140,19 +145,19 @@ export class BenefitCard extends Component {
               />
             </OneLiner>
 
-            <Grid container className={buttonRow}>
+            <Grid container css={buttonRow}>
               <Grid item xs={12}>
                 <BenefitExpansion
-                  className={padding}
+                  css={padding}
                   benefit={benefit}
                   t={t}
                   store={store}
                 />
               </Grid>
               <Grid item xs={12}>
-                <div className={flex}>
+                <div css={flex}>
                   <LearnMoreButton benefit={benefit} t={t} />
-                  <div className={floatRight}>
+                  {/* <div css={floatRight}>
                     {this.props.savedList ? (
                       <FavouriteButton
                         benefit={benefit}
@@ -161,7 +166,7 @@ export class BenefitCard extends Component {
                         t={t}
                       />
                     ) : null}
-                  </div>
+                  </div> */}
                 </div>
               </Grid>
             </Grid>
